@@ -34,11 +34,11 @@ WHERE Clean_ZeroBalanceCode = '0'; Just testing the new values to make sure upda
 SELECT LoanNumber, LoanAge, DelinqDuetoDisaster 
 FROM monthly_performance
 WHERE DelinqDuetoDisaster <> ''
-ORDER BY LoanAge;
+ORDER BY LoanAge; --1938 rows, max loan age 4
 
 SELECT DelinqAccruedInt 
 FROM monthly_performance
-WHERE DelinqAccruedInt <> '';
+WHERE DelinqAccruedInt <> ''; -- 0
 
 
 -- Original Actual UnpaidBalance , Int.Rate and LoanTerm Number for first time Home buyers;
@@ -53,7 +53,7 @@ FROM origination
 GROUP BY PropertyState
 ORDER BY PropertyState; -- 54 rows
 
--- Current Actual UnpaidBalance , Int.Rate and RamainingMonths to maturity with Loan Number
+-- Current Actual UnpaidBalance , Int.Rate and RemainingMonths to maturity with Loan Number
 SELECT LoanNumber, CurrentActualUPB, CurrentIntRate, RemainingMonthstoMaturity 
 FROM monthly_performance
 WHERE RIGHT(MonthReportPeriod,2) = 02; -- 375,979 rows
@@ -81,11 +81,11 @@ ORDER BY o.PropertyState;  -- 383,723 ROWS
 SELECT PostalCode, COUNT(*) AS [# of Loans]
 FROM origination
 GROUP BY PostalCode
-ORDER BY PostalCode;
+ORDER BY PostalCode; -- 888 rows
 
 SELECT * FROM
 monthly_performance
-WHERE ZeroBalEffectiveDate <> '';
+WHERE ZeroBalEffectiveDate <> ''; -- 8046
 
 SELECT DISTINCT CurrentLoanDelinquencyStatus
 FROM monthly_performance; -- 0,1,2,3, and 4 these are delinquency status but not find any connection with these status with any other rows
