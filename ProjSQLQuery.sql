@@ -1,3 +1,7 @@
+/* 
+Chirag Patel, Trent Brunson, Jonathan Hewlett
+
+*/
 
 -- Looking for code 01 and 06 which are not Defaulted
 SELECT ZeroBalanceCode 
@@ -157,6 +161,9 @@ SELECT DISTINCT PrepaymentPenaltyMortFlag
 FROM origination; -- Only 1 flag which is lable as 'N' and has 1214275 rows available
 
 /*
+***********************************************************
+STEP 2
+
 Selecting subset of columns for predictive analysis
 
 Target: Zero Balance Code: 96, 
@@ -179,7 +186,7 @@ Top featuers:
 		Current actual unpaid balance
 		Current loan delinquency status
 		Zero Balance Code
-
+**********************************************************
 */
 
 -- create data warngling tables
@@ -215,10 +222,7 @@ SELECT * FROM monthly_analysis
 SELECT * FROM origination_analysis
 	WHERE LoanSequenceNum NOT IN (SELECT DISTINCT LoanSequenceNum FROM monthly_analysis);
 -- 0 rows
-
-/*
-
-*/
+-- everythin matches up - key!!!
 
 --check it worked
 SELECT TOP 1000 * FROM monthly_analysis;
@@ -457,12 +461,16 @@ SELECT NumberBorrowers, COUNT(NumberBorrowers) cnt
 
 
 /*
+________________________________________________________________
+STEP 3
 THE BIG JOIN
 JOIN on loan number in a new table
+________________________________________________________________
 */
 
 SELECT o.LoanSequenceNum LoanSeqNum,
 	o.CreditScore,
+	o.FirstTimeHomebuyerFlag FirstTimeHomeBuyer,
 	o.OriginalCombineLoantovalue,
 	o.OriginalDebttoIncomeRatio,
 	o.OriginalUPB,
@@ -482,7 +490,10 @@ SELECT o.LoanSequenceNum LoanSeqNum,
 
 -- Check data table exists
 SELECT TOP 1000 * FROM merged_loan_data;
--- it has 14 columns as written; NULL values populated
+-- it has 15 columns as written; NULL values populated
+
+SELECT COUNT(*) FROM merged_loan_data;
+-- 4770815
 
 -- check cleaned data types
 -- postal code
@@ -510,3 +521,6 @@ SELECT COUNT(ZeroBalCode) FROM merged_loan_data WHERE ZeroBalCode = 0;
 -- 7945
 SELECT COUNT(ZeroBalCode) FROM merged_loan_data WHERE ZeroBalCode IS NOT NULL;
 -- 8045; rest are nulls
+
+-- DATA is good
+-- Extracting data into file
