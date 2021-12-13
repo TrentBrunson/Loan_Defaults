@@ -3,7 +3,7 @@
 SELECT *
   FROM apps;
 
-SELECT DISTINCT Category,
+SELECT Category,
   COUNT(AppName) appCount	
   FROM apps
   GROUP BY Category
@@ -240,24 +240,34 @@ SELECT * FROM Analysis_Apps_Reviews;
 -- “Guns of Glory”, etc.) from the reviews table. Explore the reviews for these apps. Add comments
 -- with any conclusions or recommendations you have regarding the app names data. 
 
-SELECT * FROM appsAnalysis
-	WHERE AppName NOT IN (SELECT DISTINCT AppName FROM reviewsAnalysis);
-	-- 9306 records in apps table not in the reviews table
-
 SELECT DISTINCT * FROM appsAnalysis
 	WHERE AppName NOT IN (SELECT DISTINCT AppName FROM reviewsAnalysis);
 	-- 9306
 SELECT DISTINCT AppName FROM appsAnalysis
-	WHERE AppName NOT IN (SELECT DISTINCT AppName FROM reviewsAnalysis);
+	WHERE AppName NOT IN (SELECT DISTINCT AppName FROM reviewsAnalysis)
+	ORDER BY AppName;
 	--8619 rows
+
+
 -- reverse the search
 SELECT * FROM reviewsAnalysis
-	WHERE AppName NOT IN (SELECT DISTINCT AppName FROM appsAnalysis);
-	-- 2739 reviews; lots of repeats
+	WHERE AppName NOT IN (SELECT DISTINCT AppName FROM appsAnalysis)
+	ORDER BY AppName;
+	-- 2739 reviews; lots of repeats but stops at H
 
 SELECT DISTINCT AppName FROM reviewsAnalysis
 	WHERE AppName NOT IN (SELECT DISTINCT AppName FROM appsAnalysis);
-	-- 54 rows not in the appsAnalysis table
+	-- 54 rows not in the reviewsAnalysis table
+
+SELECT DISTINCT AppName
+	FROM Analysis_Apps_Reviews
+	ORDER BY AppName;
+	-- 1020 rows; data table cutoff possibly? in the apps table after H
+
+SELECT DISTINCT AppName
+	FROM reviewsAnalysis
+	ORDER BY AppName;
+	-- 1074 rows; data table cutoff possibly? in the reviews table after H
 
 SELECT DISTINCT AppName, MIN(Reviews)
 	FROM appsAnalysis
@@ -267,11 +277,13 @@ SELECT AppName, COUNT(Reviews) RevCnt
 	FROM appsAnalysis
 	GROUP BY AppName
 	ORDER BY RevCnt DESC;
+	-- pick ROBLOX form here
 
 SELECT AppName, COUNT(ReviewText) RevCnt
 	FROM reviewsAnalysis
 	GROUP BY AppName
 	ORDER BY RevCnt DESC;
+	-- Pick Angry birds and Drawing clothes from here
 
 -- App selection
 -- ROBLOX
@@ -281,11 +293,47 @@ SELECT AppName, COUNT(ReviewText) RevCnt
 SELECT * 
 	FROM appsAnalysis
 	WHERE AppName = 'Angry Birds Classic';
-
-SELECT * 
-	FROM reviewsAnalysis
-	WHERE AppName = 'Angry Birds Classic';
+-- 5 rows - all dupes
 
 SELECT * 
 	FROM appsAnalysis
+	WHERE AppName = 'ROBLOX';
+-- 9 rows - all dupes
+
+SELECT * 
+	FROM appsAnalysis
+	WHERE AppName = 'Drawing Clothes Fashion Ideas'
+-- 1 row
+
+SELECT * 
+	FROM reviewsAnalysis
 	WHERE AppName = 'Angry Birds Classic'
+	ORDER BY ReviewText;
+-- 320 rows - lots of dupes
+
+SELECT * 
+	FROM reviewsAnalysis
+	WHERE AppName = 'ROBLOX';
+-- 0 rows; this matches what found earlier in sort for reviews_analysis that there are no app names after H
+
+SELECT * 
+	FROM reviewsAnalysis
+	WHERE AppName = 'Drawing Clothes Fashion Ideas'
+-- 30 rows; nothing distinct - no values
+
+SELECT * 
+	FROM appsAnalysis
+	WHERE AppName = 'Guns of Glory';
+-- 1 row
+
+SELECT * 
+	FROM reviewsAnalysis
+	WHERE AppName = 'Guns of Glory'
+	ORDER BY ReviewText;
+-- all 40 rows are unique
+
+/*
+This dataset is invalid.  Dupes galore; missing values; tables don't align;
+table is truncated in another case.  Find another dataset to examine
+Google Play Store.
+*/
